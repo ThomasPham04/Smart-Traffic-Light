@@ -1,37 +1,41 @@
 /*
  * scheduler.h
  *
- *  Created on: Nov 18, 2024
- *      Author: Admin
+ *  Created on: Jul 31, 2023
+ *      Author: Phuc Le
  */
 
-#ifndef INC_SCHEDULER_H_
-#define INC_SCHEDULER_H_
+#ifndef __SCHEDULER_H_
+#define __SCHEDULER_H_
 
-#include <stdint.h>
+#include "stdint.h"
+#include "main.h"
+#include "global.h"
 
-typedef struct{
-	void (*pTask) (void);
-	uint32_t	Delay;
-	uint32_t	Period;
-	uint8_t 	RunMe;
+// MUST BE ADJUSTED FOR EACH NEW PROJECT
+#define SCH_MAX_TASKS		10
+#define NO_TASK_ID			0
 
-	uint32_t	TaskID;
-}sTasks;
+#define TICKS				10
 
-#define SCH_MAX_TASKS 40
+typedef struct {
+	// Pointer to the task (must be a 'void (void)' function)
+	void (* pTask)(void);
+	// Delay (ticks) until the function will (next) be run
+	int32_t Delay;
+	// Interval (ticks) between subsequent runs.
+	int32_t Period;
+	// Incremented (by scheduler) when task is due to execute
+	int8_t RunMe;
+	uint32_t TaskID;
+} sTask;
 
-void SCH_Init (void);
+extern sTask SCH_tasks_G[SCH_MAX_TASKS];
+// extern unsigned char Error_code_G;
 
-// giong nhu set timer nhung lan nay ta co con tro lam delay va period
-void SCH_Add_Task (	void (*pFunction)(),
-					uint32_t DELAY,
-					uint32_t PERIOD);
-
-void SCH_Update(void); // giong timerRun
-
-void SCH_Dispatch_Tasks(void); //kiem tra timerFlag
-
-void SCH_Delete_Task (uint32_t ID);
+void SCH_Init(void);
+void SCH_Update(void);
+unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned int PERIOD);
+void SCH_Dispatch_Tasks(void);
 
 #endif /* INC_SCHEDULER_H_ */

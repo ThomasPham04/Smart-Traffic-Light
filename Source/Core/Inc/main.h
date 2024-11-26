@@ -70,12 +70,10 @@ void Error_Handler(void);
 #define EN3_GPIO_Port GPIOA
 #define LED_RED_Pin GPIO_PIN_5
 #define LED_RED_GPIO_Port GPIOA
-#define LED_YELLOW_Pin GPIO_PIN_6
-#define LED_YELLOW_GPIO_Port GPIOA
-#define LED_GREEN_Pin GPIO_PIN_7
+#define LED_GREEN_Pin GPIO_PIN_6
 #define LED_GREEN_GPIO_Port GPIOA
-#define LED_1_RED_Pin GPIO_PIN_0
-#define LED_1_RED_GPIO_Port GPIOB
+#define LED_YELLOW_Pin GPIO_PIN_7
+#define LED_YELLOW_GPIO_Port GPIOA
 #define LED_1_GREEN_Pin GPIO_PIN_1
 #define LED_1_GREEN_GPIO_Port GPIOB
 #define LED_1_YELLOW_Pin GPIO_PIN_2
@@ -92,6 +90,8 @@ void Error_Handler(void);
 #define Button2_GPIO_Port GPIOB
 #define Button3_Pin GPIO_PIN_15
 #define Button3_GPIO_Port GPIOB
+#define LED_BLUE_Pin GPIO_PIN_8
+#define LED_BLUE_GPIO_Port GPIOA
 #define SEG_0_Pin GPIO_PIN_9
 #define SEG_0_GPIO_Port GPIOA
 #define SEG_1_Pin GPIO_PIN_10
@@ -121,7 +121,9 @@ void Error_Handler(void);
 #define SEG_03_Pin GPIO_PIN_9
 #define SEG_03_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#ifdef SCH_REPORT_ERRORS
+#define Error_port PORTA
+#endif
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

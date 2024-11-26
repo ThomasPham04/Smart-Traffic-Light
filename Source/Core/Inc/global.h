@@ -31,6 +31,9 @@
 #define SET_AMBER		22
 #define SET_GREEN		23
 
+#define TOGGLE 31
+#define NO_TOGGLE 32
+
 extern uint8_t led_buffer[4];
 
 extern int fsm_status;

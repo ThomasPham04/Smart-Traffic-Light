@@ -1,101 +1,140 @@
 /*
  * scheduler.c
  *
- *  Created on: Nov 18, 2024
- *      Author: Admin
+ *  Created on: Jul 31, 2023
+ *      Author: Phuc Le
  */
 
+#include "scheduler.h"
+
+sTask SCH_tasks_G[SCH_MAX_TASKS];
+//unsigned char Error_code_G = 0;
+
+unsigned char SCH_Delete_Task(const unsigned char TASK_INDEX) {
+	unsigned char Return_code = 0;
+	if (SCH_tasks_G[TASK_INDEX].pTask == 0) {
+		Return_code = 1;
+	} else {
+		Return_code = 0;
+	}
+	SCH_tasks_G[TASK_INDEX].pTask = 0x0000;
+	SCH_tasks_G[TASK_INDEX].Delay = 0;
+	SCH_tasks_G[TASK_INDEX].Period = 0;
+	SCH_tasks_G[TASK_INDEX].RunMe = 0;
+	return Return_code;	// return status
+}
+
+void SCH_Init(void) {
+	unsigned char i;
+	for (i = 0; i < SCH_MAX_TASKS; i++) {
+		SCH_Delete_Task(i);
+	}
+	// Reset the global error variable
+	// - SCH_Delete_Task() will generate an error code,
+	// (because the task array is empty)
+	//Error_code_G = 0;
+	//Timer_init();
+	//Watchdog_init();
+}
+
+void SCH_Update(void) {
+	unsigned char Index;
+	// NOTE: calculations are in *TICKS* (not milliseconds)
+	for (Index = 0; Index < SCH_MAX_TASKS; Index++) {
+		// Check if there is a task at this location
+		if (SCH_tasks_G[Index].pTask) {
+			// Not yet ready to run: just decrement the delay
+			SCH_tasks_G[Index].Delay -= 1;
+			if (SCH_tasks_G[Index].Delay <= 0) {
+				// The task is due to run
+				// Increase the 'RunMe' flag
+				SCH_tasks_G[Index].RunMe += 1;
+				if (SCH_tasks_G[Index].Period) {
+					// Schedule periodic tasks to run again
+					SCH_tasks_G[Index].Delay = SCH_tasks_G[Index].Period;
+				}
+			}
+		}
+	}
+}
+
+/* SCH_Add_Task() function
+ * @brief	Causes a task (function) to be executed at regular intervals
+ * 			or after a user-defined delay
+ * @param	pFunction - the name of the task that user wish to schedule
+ * @param	DELAY - the delay (in ticks) before task is first executed
+ * @param	PERIOD - the interval (in ticks) between repeated executions
+ * 			of the task
+ * @retval	TaskID
+ */
+unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned int PERIOD) {
+	unsigned char Index = 0;
+	//First find a gap in the array (if there is one)
+	while ((SCH_tasks_G[Index].pTask != 0) && (Index < SCH_MAX_TASKS)) {
+		Index++;
+	}
+	// Have we reached the end of the list?
+	if (Index == SCH_MAX_TASKS) {
+		// Task list is full
+		// Set the global error variable
+		// Error_code_G = ERROR_SCH_TOO_MANY_TASKS;
+		// Also return an error code
+		return SCH_MAX_TASKS;
+	}
+	// If we're here, there is a space in task array
+	SCH_tasks_G[Index].pTask = pFunction;
+	SCH_tasks_G[Index].Delay = DELAY / TICKS;
+	SCH_tasks_G[Index].Period = PERIOD / TICKS;
+	SCH_tasks_G[Index].RunMe = 0;
+	// return position of task (to allow later deletion)
+	return Index;
+}
+
+void SCH_Dispatch_Tasks(void) {
+	unsigned char Index;
+	// Dispatches (runs) the next task (if one is ready)
+	for (Index = 0; Index < SCH_MAX_TASKS; Index++) {
+		if (!(SCH_tasks_G[Index].pTask)) continue;
+		if (SCH_tasks_G[Index].RunMe > 0) {
+			(* SCH_tasks_G[Index].pTask)();	// Run the task
+			SCH_tasks_G[Index].RunMe -= 1;	// Reset/reduce RunMe flag
+			// Peridic tasks will automatically run again
+			// - if this is a 'one shot' task, remove it from the array
+			if (SCH_tasks_G[Index].Period == 0) {
+				SCH_Delete_Task(Index);
+			}
+//			HAL_UART_Transmit(&huart2, (uint8_t *)data, sprintf(data, "Task %d is dispatched at %d: Runme = %d\r\n", Index, time_stamp, SCH_tasks_G[Index].RunMe), 1000);
+		}
+	}
+	// Report system status
+	//SCH_Report_Status();
+	// The scheduler enters idle mode at this point
+	//SCH_Go_To_Sleep();
+}
+
 /*
- This set of parameters causes the function Do_X() to be executed once after 1,000 scheduler ticks:
-SCH_Add_Task(Do_X,1000,0);
-This does the same, but saves the task ID (the position in the task array) so that the task
-may be subsequently deleted, if necessary (see SCH_Delete_Task() for further information
-about the removal of tasks from the task array):
-Task_ID = SCH_Add_Task(Do_X,1000,0);
-This causes the function Do_X() to be executed regularly every 1,000 scheduler ticks; the
-task will first be executed as soon as the scheduling is started:
-SCH_Add_Task(Do_X,0,1000);
-This causes the function Do_X() to be executed regularly every 1,000 scheduler ticks; task
-will be first executed at T = 300 ticks, then 1,300, 2,300 etc:
-SCH_Add_Task(Do_X,300,1000);
+void SCH_Go_To_Sleep() {
+	// TO DO: Optional
+}
+
+void SCH_Report_Status(void) {
+#ifdef SCH_REPORT_ERRORS
+	// ONLY APPLIES IF WE ARE REPORTING ERRORS
+	// Check for a new error code
+	if (Error_code_G != Last_error_code_G)) {
+		Error_port = 255 - Error_code_G;
+		if (Error_code_G != 0) {
+			Error_tick_count_G = 60000;
+		} else {
+			Error_tick_count_G = 0;
+		}
+	} else {
+		if (Error_tick_count_G != 0) {
+			if (--Error_tick_count_G == 0) {
+				Error_code_G = 0;	// Reset error code
+			}
+		}
+	}
+#endif
+}
 */
-
-
-/*Hardware fails; software is never perfect; errors are a fact of life. To report errors at any
-part of the scheduled application, we can use an (8-bit) error code variable Error_code_G
-unsigned char Error_code_G = 0;
-To record an error we include lines such as:
-• Error_code_G = ERROR_SCH_TOO_MANY_TASKS;
-• Error_code_G = ERROR_SCH_WAITING_FOR_SLAVE_TO_ACK;
-• Error_code_G = ERROR_SCH_WAITING_FOR_START_COMMAND_FROM_MASTER;
-• Error_code_G = ERROR_SCH_ONE_OR_MORE_SLAVES_DID_NOT_START;
-• Error_code_G = ERROR_SCH_LOST_SLAVE;
-• Error_code_G = ERROR_SCH_CAN_BUS_ERROR;
-• Error_code_G = ERROR_I2C_WRITE_BYTE_AT24C64;
-To report these error codes, the scheduler has a function SCH_Report_Status(), which is
-called from the Update function*/
-
-/*2.3.8 Reducing power consumption
-An important feature of scheduled applications is that they can lend themselves to lowpower operation. This is possible because all modern MCU provide an ‘idle’ mode, where
-the CPU activity is halted, but the state of the processor is maintained. In this mode, the
-power required to run the processor is typically reduced by around 50
-This idle mode is particularly effective in scheduled applications because it may be entered under software control, and the MCU returns to the normal operating mode when
-any interrupt is received. Because the scheduler generates regular timer interrupts as a
-matter of course, we can put the system ‘ to sleep’ at the end of every dispatcher call: it
-will then wake up when the next timer tick occurs.
-This is an optional feature. Students can do by yourself by looking at the reference manual
-of the MCU that is used.
-1 void SCH_Go_To_Sleep ( ) {
-2 // todo : Optional
-3 }
-Program 1.14: An implementation of the scheduler ‘go to sleep’ function*/
-#include <scheduler.h>
-
-sTasks SCH_tasks_G[SCH_MAX_TASKS];
-uint8_t current_index_task = 0;
-
-void Init (void){
-	current_index_task = 0;
-}
-
-void SCH_Add_Task ( void(*pFunction)(), uint32_t DELAY, uint32_t PERIOD){
-	if (current_index_task < SCH_MAX_TASKS){
-		SCH_tasks_G[current_index_task].pTask = pFunction;
-		SCH_tasks_G[current_index_task].Delay = DELAY;
-		SCH_tasks_G[current_index_task].Period = PERIOD;
-		SCH_tasks_G[current_index_task].RunMe = 0;
-
-		SCH_tasks_G[current_index_task].TaskID = current_index_task;
-
-		current_index_task++;
-	}
-};
-
-// duoc goi trong ngat timer, nhiem vu la de tru counter
-void SCH_Update(void){
-
-	for (int i = 0; i < current_index_task; i++){
-		if (SCH_tasks_G[i].Delay > 0){
-			SCH_tasks_G[i].Delay--;
-		} else{
-			SCH_tasks_G[i].Delay= SCH_tasks_G[i].Period;
-			SCH_tasks_G[i].RunMe += 1;
-		}
-	}
-}
-
-//As we have seen, the ‘Update’ function does not execute any tasks: the tasks that are due
-//to run are invoked through the ‘Dispatcher’ function.
-//The dispatcher is the only component in the Super Loop:
-void SCH_Dispatch_Tasks(void){
-	for (int i = 0; i < current_index_task; i++){
-		if (SCH_tasks_G[i].RunMe > 0){
-			SCH_tasks_G[i].RunMe--;
-			(*SCH_tasks_G[i].pTask)();
-		}
-	}
-}
-
-void SCH_Delete_Task (uint32_t ID){
-
-}
