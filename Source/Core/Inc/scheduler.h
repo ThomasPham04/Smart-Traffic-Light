@@ -1,8 +1,8 @@
 /*
  * scheduler.h
  *
- *  Created on: Jul 31, 2023
- *      Author: Phuc Le
+ *  Created on: Nov 20, 2024
+ *      Author: Admin
  */
 
 #ifndef __SCHEDULER_H_
@@ -27,11 +27,10 @@ typedef struct {
 } sTask;
 
 extern sTask SCH_tasks_G[SCH_MAX_TASKS];
-// extern unsigned char Error_code_G;
 
 void SCH_Init(void);
 void SCH_Update(void);
 unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned int PERIOD);
 void SCH_Dispatch_Tasks(void);
-unsigned char SCH_Delete_Task(const unsigned char TASK_INDEX);
+
 #endif /* INC_SCHEDULER_H_ */
