@@ -2,7 +2,7 @@
  * scheduler.c
  *
  *  Created on: Jul 31, 2023
- *      Author: Phuc Le
+ *      Author: Admin
  */
 
 #include "scheduler.h"
