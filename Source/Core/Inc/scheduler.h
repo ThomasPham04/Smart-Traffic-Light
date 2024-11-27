@@ -19,13 +19,9 @@
 #define TICKS				10
 
 typedef struct {
-	// Pointer to the task (must be a 'void (void)' function)
 	void (* pTask)(void);
-	// Delay (ticks) until the function will (next) be run
 	int32_t Delay;
-	// Interval (ticks) between subsequent runs.
 	int32_t Period;
-	// Incremented (by scheduler) when task is due to execute
 	int8_t RunMe;
 	uint32_t TaskID;
 } sTask;
@@ -37,5 +33,5 @@ void SCH_Init(void);
 void SCH_Update(void);
 unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned int PERIOD);
 void SCH_Dispatch_Tasks(void);
-
+unsigned char SCH_Delete_Task(const unsigned char TASK_INDEX);
 #endif /* INC_SCHEDULER_H_ */
