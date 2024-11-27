@@ -37,11 +37,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00016b70  00000000  00000000  0002c2b8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000b0a1  00000000  00000000  00042e28  2**0
+ 17 .debug_line   0000b0a0  00000000  00000000  00042e28  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000827e3  00000000  00000000  0004dec9  2**0
+ 18 .debug_str    000827e3  00000000  00000000  0004dec8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000053  00000000  00000000  000d06ac  2**0
+ 19 .comment      00000053  00000000  00000000  000d06ab  2**0
                   CONTENTS, READONLY
  20 .debug_frame  00002854  00000000  00000000  000d0700  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -868,7 +868,7 @@ unsigned char SCH_Delete_Task(const unsigned char TASK_INDEX) {
  80005a0:	681b      	ldr	r3, [r3, #0]
  80005a2:	2b00      	cmp	r3, #0
  80005a4:	d102      	bne.n	80005ac <SCH_Delete_Task+0x28>
-		Return_code = 1;
+			Return_code = 1;
  80005a6:	2301      	movs	r3, #1
  80005a8:	73fb      	strb	r3, [r7, #15]
  80005aa:	e001      	b.n	80005b0 <SCH_Delete_Task+0x2c>
@@ -942,12 +942,11 @@ void SCH_Update(void) {
  8000612:	b083      	sub	sp, #12
  8000614:	af00      	add	r7, sp, #0
 	unsigned char Index;
-	// NOTE: calculations are in *TICKS* (not milliseconds)
+
 	for (Index = 0; Index < SCH_MAX_TASKS; Index++) {
  8000616:	2300      	movs	r3, #0
  8000618:	71fb      	strb	r3, [r7, #7]
  800061a:	e05f      	b.n	80006dc <SCH_Update+0xcc>
-		// Check if there is a task at this location
 		if (SCH_tasks_G[Index].pTask) {
  800061c:	79fa      	ldrb	r2, [r7, #7]
  800061e:	4934      	ldr	r1, [pc, #208]	; (80006f0 <SCH_Update+0xe0>)
@@ -959,7 +958,6 @@ void SCH_Update(void) {
  800062a:	681b      	ldr	r3, [r3, #0]
  800062c:	2b00      	cmp	r3, #0
  800062e:	d052      	beq.n	80006d6 <SCH_Update+0xc6>
-			// Not yet ready to run: just decrement the delay
 			SCH_tasks_G[Index].Delay -= 1;
  8000630:	79fa      	ldrb	r2, [r7, #7]
  8000632:	492f      	ldr	r1, [pc, #188]	; (80006f0 <SCH_Update+0xe0>)
@@ -992,8 +990,6 @@ void SCH_Update(void) {
  8000666:	681b      	ldr	r3, [r3, #0]
  8000668:	2b00      	cmp	r3, #0
  800066a:	dc34      	bgt.n	80006d6 <SCH_Update+0xc6>
-				// The task is due to run
-				// Increase the 'RunMe' flag
 				SCH_tasks_G[Index].RunMe += 1;
  800066c:	79fa      	ldrb	r2, [r7, #7]
  800066e:	4920      	ldr	r1, [pc, #128]	; (80006f0 <SCH_Update+0xe0>)
@@ -1030,7 +1026,6 @@ void SCH_Update(void) {
  80006ac:	681b      	ldr	r3, [r3, #0]
  80006ae:	2b00      	cmp	r3, #0
  80006b0:	d011      	beq.n	80006d6 <SCH_Update+0xc6>
-					// Schedule periodic tasks to run again
 					SCH_tasks_G[Index].Delay = SCH_tasks_G[Index].Period;
  80006b2:	79f9      	ldrb	r1, [r7, #7]
  80006b4:	79fa      	ldrb	r2, [r7, #7]
@@ -1072,11 +1067,7 @@ void SCH_Update(void) {
  80006f0:	2000008c 	.word	0x2000008c
 
 080006f4 <SCH_Add_Task>:
- * @param	DELAY - the delay (in ticks) before task is first executed
- * @param	PERIOD - the interval (in ticks) between repeated executions
- * 			of the task
- * @retval	TaskID
- */
+
 unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned int PERIOD) {
  80006f4:	b480      	push	{r7}
  80006f6:	b087      	sub	sp, #28
@@ -1087,7 +1078,6 @@ unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned i
 	unsigned char Index = 0;
  8000700:	2300      	movs	r3, #0
  8000702:	75fb      	strb	r3, [r7, #23]
-	//First find a gap in the array (if there is one)
 	while ((SCH_tasks_G[Index].pTask != 0) && (Index < SCH_MAX_TASKS)) {
  8000704:	e002      	b.n	800070c <SCH_Add_Task+0x18>
 		Index++;
@@ -1109,20 +1099,14 @@ unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned i
  8000722:	2b09      	cmp	r3, #9
  8000724:	d9ef      	bls.n	8000706 <SCH_Add_Task+0x12>
 	}
-	// Have we reached the end of the list?
 	if (Index == SCH_MAX_TASKS) {
  8000726:	7dfb      	ldrb	r3, [r7, #23]
  8000728:	2b0a      	cmp	r3, #10
  800072a:	d101      	bne.n	8000730 <SCH_Add_Task+0x3c>
-		// Task list is full
-		// Set the global error variable
-		// Error_code_G = ERROR_SCH_TOO_MANY_TASKS;
-		// Also return an error code
 		return SCH_MAX_TASKS;
  800072c:	230a      	movs	r3, #10
  800072e:	e031      	b.n	8000794 <SCH_Add_Task+0xa0>
 	}
-	// If we're here, there is a space in task array
 	SCH_tasks_G[Index].pTask = pFunction;
  8000730:	7dfa      	ldrb	r2, [r7, #23]
  8000732:	491b      	ldr	r1, [pc, #108]	; (80007a0 <SCH_Add_Task+0xac>)
@@ -1174,7 +1158,6 @@ unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned i
  800078c:	330c      	adds	r3, #12
  800078e:	2200      	movs	r2, #0
  8000790:	701a      	strb	r2, [r3, #0]
-	// return position of task (to allow later deletion)
 	return Index;
  8000792:	7dfb      	ldrb	r3, [r7, #23]
 }
@@ -1188,13 +1171,12 @@ unsigned char SCH_Add_Task(void (* pFunction) (), unsigned int DELAY, unsigned i
  80007a4:	cccccccd 	.word	0xcccccccd
 
 080007a8 <SCH_Dispatch_Tasks>:
-
+//
 void SCH_Dispatch_Tasks(void) {
  80007a8:	b580      	push	{r7, lr}
  80007aa:	b082      	sub	sp, #8
  80007ac:	af00      	add	r7, sp, #0
 	unsigned char Index;
-	// Dispatches (runs) the next task (if one is ready)
 	for (Index = 0; Index < SCH_MAX_TASKS; Index++) {
  80007ae:	2300      	movs	r3, #0
  80007b0:	71fb      	strb	r3, [r7, #7]
@@ -1222,7 +1204,7 @@ void SCH_Dispatch_Tasks(void) {
  80007d8:	f993 3000 	ldrsb.w	r3, [r3]
  80007dc:	2b00      	cmp	r3, #0
  80007de:	dd31      	ble.n	8000844 <SCH_Dispatch_Tasks+0x9c>
-			(* SCH_tasks_G[Index].pTask)();	// Run the task
+			(* SCH_tasks_G[Index].pTask)();
  80007e0:	79fa      	ldrb	r2, [r7, #7]
  80007e2:	491e      	ldr	r1, [pc, #120]	; (800085c <SCH_Dispatch_Tasks+0xb4>)
  80007e4:	4613      	mov	r3, r2
@@ -1232,7 +1214,7 @@ void SCH_Dispatch_Tasks(void) {
  80007ec:	440b      	add	r3, r1
  80007ee:	681b      	ldr	r3, [r3, #0]
  80007f0:	4798      	blx	r3
-			SCH_tasks_G[Index].RunMe -= 1;	// Reset/reduce RunMe flag
+			SCH_tasks_G[Index].RunMe -= 1;
  80007f2:	79fa      	ldrb	r2, [r7, #7]
  80007f4:	4919      	ldr	r1, [pc, #100]	; (800085c <SCH_Dispatch_Tasks+0xb4>)
  80007f6:	4613      	mov	r3, r2
@@ -1256,8 +1238,6 @@ void SCH_Dispatch_Tasks(void) {
  800081c:	330c      	adds	r3, #12
  800081e:	4602      	mov	r2, r0
  8000820:	701a      	strb	r2, [r3, #0]
-			// Peridic tasks will automatically run again
-			// - if this is a 'one shot' task, remove it from the array
 			if (SCH_tasks_G[Index].Period == 0) {
  8000822:	79fa      	ldrb	r2, [r7, #7]
  8000824:	490d      	ldr	r1, [pc, #52]	; (800085c <SCH_Dispatch_Tasks+0xb4>)
