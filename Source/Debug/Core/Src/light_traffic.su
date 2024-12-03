@@ -16,4 +16,4 @@ light_traffic.c:156:6:display7SEG	16	static
 light_traffic.c:254:5:currentMode	4	static
 light_traffic.c:268:6:dispMode	16	static
 light_traffic.c:312:6:update7SEG	16	static
-light_traffic.c:347:6:updateClock	8	static
+light_traffic.c:348:6:updateClock	8	static

@@ -67,6 +67,10 @@ void Led_Toggle(){
 		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 	}
 }
+
+void dispModeWrapper(){
+	dispMode(mode);
+}
 /* USER CODE END 0 */
 
 /**
@@ -116,11 +120,12 @@ int main(void)
   // End Button
 
   	// Start Display Led
-  	SCH_Add_Task(dispMode(mode), 0, 10);
-  	SCH_Add_Task(updateClock, 0, 250);
+  	SCH_Add_Task(dispModeWrapper, 0, 10);
+  	SCH_Add_Task(updateClock, 0, 10);
   	// End Display Led
 
   	SCH_Add_Task(fsm_automatic_run, 0, 100);
+  	SCH_Add_Task(fsm_manual_run, 0, 100);
   while (1)
   {
 	  SCH_Dispatch_Tasks();

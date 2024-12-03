@@ -45,4 +45,9 @@ extern int red_time_temp, green_time_temp, amber_time_temp;
 
 extern int index_led;
 
+extern int counter1;
+extern int counter2;
+extern int counter3;
+
+extern int counter_led;
 #endif /* INC_GLOBAL_H_ */

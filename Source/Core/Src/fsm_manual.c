@@ -6,95 +6,104 @@
  */
 
 #include "fsm_manual.h"
-void fsm_manual_run(){
-	switch (status){
-	case MAN_RED:
-		if (timer_led_flag == 1){
-			setToggleRed();
-			setTimerLed(500);
-		}
 
-		if (timer1_flag == 1){
-			status = RED_GREEN;
-			setTimer1(10000);
-		}
+int counter_led = 0;
 
-		if (isButton1Pressed() == 1){
-			red_time_temp = red_time;
-			status = MAN_AMBER;
-			setTimer1(10000);
-		}
+void fsm_manual_run() {
+    switch (status) {
+    case MAN_RED:
+        if (counter_led > 0) counter_led--;
+        if (counter_led == 0) {
+            setToggleRed();
+            counter_led = 50;
+        }
 
-		if (isButton2Pressed() == 1){
-			red_time_temp++;
-			if (red_time_temp > 99) red_time_temp = 0;
-			setTimer1(10000);
-		}
+        if (counter1 > 0) counter1--;
+        if (counter1 == 0) {
+            status = RED_GREEN;
+            counter1 = 1000;
+        }
 
-		if (isButton3Pressed() == 1){
-			status = SET_RED;
-		}
+        if (isButton1Pressed() == 1) {
+            red_time_temp = red_time;
+            status = MAN_AMBER;
+            counter1 = 1000;
+        }
 
-		break;
+        if (isButton2Pressed() == 1) {
+            red_time_temp++;
+            if (red_time_temp > 99) red_time_temp = 0;
+            counter1 = 1000;
+        }
 
-	case MAN_AMBER:
-		if (timer_led_flag == 1){
-			setToggleYellow();
-			setTimerLed(500);
-		}
+        if (isButton3Pressed() == 1) {
+            status = SET_RED;
+        }
 
-		if (timer1_flag == 1){
-			status = RED_GREEN;
-			setTimer1(10000);
-		}
+        break;
 
-		if (isButton1Pressed() == 1){
-			amber_time_temp = amber_time;
-			status = MAN_GREEN;
-			setTimer1(10000);
-		}
+    case MAN_AMBER:
+        if (counter_led > 0) counter_led--;
+        if (counter_led == 0) {
+            setToggleYellow();
+            counter_led = 50;
+        }
 
-		if (isButton2Pressed() == 1){
-			amber_time_temp++;
-			if (amber_time_temp > 99) amber_time_temp = 0;
-			setTimer1(10000);
-		}
+        if (counter1 > 0) counter1--;
+        if (counter1 == 0) {
+            status = RED_GREEN;
+            counter1 = 1000;
+        }
 
-		if(isButton3Pressed() == 1){
-			status = SET_AMBER;
-		}
-		break;
+        if (isButton1Pressed() == 1) {
+            amber_time_temp = amber_time;
+            status = MAN_GREEN;
+            counter1 = 1000;
+        }
 
-	case MAN_GREEN:
-		if (timer_led_flag == 1){
-			setToggleGreen();
-			setTimerLed(500);
-		}
+        if (isButton2Pressed() == 1) {
+            amber_time_temp++;
+            if (amber_time_temp > 99) amber_time_temp = 0;
+            counter1 = 1000;
+        }
 
-		if (timer1_flag == 1){
-			green_time_temp = green_time;
-			status = RED_GREEN;
-			setTimer1(10000);
-		}
+        if (isButton3Pressed() == 1) {
+            status = SET_AMBER;
+        }
+        break;
 
-		if (isButton1Pressed() == 1){
-			green_time_temp = green_time;
-			status = INIT;
-			setTimer1(1000);
-		}
+    case MAN_GREEN:
+        if (counter_led > 0) counter_led--;
+        if (counter_led == 0) {
+            setToggleGreen();
+            counter_led = 50;
+        }
 
-		if (isButton2Pressed() == 1){
-			green_time_temp++;
-			if (green_time_temp > 99) green_time_temp = 0;
-			setTimer1(10000);
-		}
+        if (counter1 > 0) counter1--;
+        if (counter1 == 0) {
+            green_time_temp = green_time;
+            status = RED_GREEN;
+            counter1 = 1000;
+        }
 
-		if (isButton3Pressed()){
-			status = SET_GREEN;
-		}
-		break;
+        if (isButton1Pressed() == 1) {
+            green_time_temp = green_time;
+            status = INIT;
+            counter1 = 100;
+        }
 
-	default:
-		break;
-	}
+        if (isButton2Pressed() == 1) {
+            green_time_temp++;
+            if (green_time_temp > 99) green_time_temp = 0;
+            counter1 = 1000;
+        }
+
+        if (isButton3Pressed() == 1) {
+            status = SET_GREEN;
+        }
+        break;
+
+    default:
+        break;
+    }
 }

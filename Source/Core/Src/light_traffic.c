@@ -343,13 +343,15 @@ void update7SEG (int index){
 	}
 }
 
+int counter2 = 0;
 
 void updateClock() {
-	if(timer2_flag == 1){
+	if (counter2 > 0) counter2--;
+	if(counter2 <= 0){
+		counter2 = 25;
 		if (index_led > 3){
 			index_led = 0;
 		}
 		update7SEG(index_led++);
-//		setTimer2(250);
 	}
 }
