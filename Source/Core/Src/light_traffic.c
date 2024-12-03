@@ -350,6 +350,6 @@ void updateClock() {
 			index_led = 0;
 		}
 		update7SEG(index_led++);
-		setTimer2(250);
+//		setTimer2(250);
 	}
 }

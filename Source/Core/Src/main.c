@@ -62,7 +62,11 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void Led_Toggle(){
+	if (isButton1Pressed() == 1){
+		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -105,9 +109,21 @@ int main(void)
 //  setTimer2(100);
 //  setTimer3(100);
 //  setTimerLed(100);
+  // Start Button
+  	SCH_Add_Task(getKey1Input, 0, 10);
+  	SCH_Add_Task(getKey2Input, 0, 10);
+  	SCH_Add_Task(getKey3Input, 0, 10);
+  // End Button
+
+  	// Start Display Led
+  	SCH_Add_Task(dispMode(mode), 0, 10);
+  	SCH_Add_Task(updateClock, 0, 250);
+  	// End Display Led
+
+  	SCH_Add_Task(fsm_automatic_run, 0, 100);
   while (1)
   {
-
+	  SCH_Dispatch_Tasks();
 //	  if (timer0_flag == 1){
 //		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
 //		  setTimer0(1000);
@@ -118,7 +134,7 @@ int main(void)
 //		fsm_manual_run();
 //		fsm_setting_run();
 //		updateClock();
-	 SCH_Dispatch_Tasks();
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -275,10 +291,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	SCH_Update();
-	getKey1Input();
-	getKey2Input();
-	getKey3Input();
-	timerRun();
+//	timerRun();
 }
 /* USER CODE END 4 */
 

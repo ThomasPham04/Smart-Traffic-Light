@@ -22,4 +22,6 @@ int isButton3Pressed();
 void getKey1Input();
 void getKey2Input();
 void getKey3Input();
+
+
 #endif /* INC_BUTTON_H_ */
