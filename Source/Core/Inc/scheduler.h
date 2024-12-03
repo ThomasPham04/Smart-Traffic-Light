@@ -1,8 +1,8 @@
 /*
  * scheduler.h
  *
- *  Created on: Jul 31, 2023
- *      Author: Phuc Le
+ *  Created on: Nov 20, 2024
+ *      Author: Admin
  */
 
 #ifndef __SCHEDULER_H_
@@ -12,7 +12,6 @@
 #include "main.h"
 #include "global.h"
 
-// MUST BE ADJUSTED FOR EACH NEW PROJECT
 #define SCH_MAX_TASKS		10
 #define NO_TASK_ID			0
 

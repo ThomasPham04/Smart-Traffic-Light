@@ -20,8 +20,8 @@ void fsm_manual_run(){
 		}
 
 		if (isButton1Pressed() == 1){
-			status = MAN_AMBER;
 			red_time_temp = red_time;
+			status = MAN_AMBER;
 			setTimer1(10000);
 		}
 
@@ -36,33 +36,7 @@ void fsm_manual_run(){
 		}
 
 		break;
-	case MAN_GREEN:
-		if (timer_led_flag == 1){
-			setToggleGreen();
-			setTimerLed(500);
-		}
 
-		if (timer1_flag == 1){
-			green_time_temp = green_time;
-			status = RED_GREEN;
-			setTimer1(10000);
-		}
-
-		if (isButton1Pressed() == 1){
-			status = RED_GREEN;;
-			setTimer1(1000);
-		}
-
-		if (isButton2Pressed() == 1){
-			green_time_temp++;
-			if (green_time_temp > 99) green_time_temp = 0;
-			setTimer1(10000);
-		}
-
-		if (isButton3Pressed()){
-			status = SET_GREEN;
-		}
-		break;
 	case MAN_AMBER:
 		if (timer_led_flag == 1){
 			setToggleYellow();
@@ -75,8 +49,8 @@ void fsm_manual_run(){
 		}
 
 		if (isButton1Pressed() == 1){
-			status = MAN_GREEN;
 			amber_time_temp = amber_time;
+			status = MAN_GREEN;
 			setTimer1(10000);
 		}
 
@@ -90,6 +64,36 @@ void fsm_manual_run(){
 			status = SET_AMBER;
 		}
 		break;
+
+	case MAN_GREEN:
+		if (timer_led_flag == 1){
+			setToggleGreen();
+			setTimerLed(500);
+		}
+
+		if (timer1_flag == 1){
+			green_time_temp = green_time;
+			status = RED_GREEN;
+			setTimer1(10000);
+		}
+
+		if (isButton1Pressed() == 1){
+			green_time_temp = green_time;
+			status = INIT;
+			setTimer1(1000);
+		}
+
+		if (isButton2Pressed() == 1){
+			green_time_temp++;
+			if (green_time_temp > 99) green_time_temp = 0;
+			setTimer1(10000);
+		}
+
+		if (isButton3Pressed()){
+			status = SET_GREEN;
+		}
+		break;
+
 	default:
 		break;
 	}

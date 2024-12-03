@@ -38,8 +38,16 @@ void SCH_Init(void) {
 }
 
 void SCH_Update(void) {
+//	if (SCH_tasks_G[0].pTask){
+//		SCH_tasks_G[0].Delay--;
+//		if (SCH_tasks_G[0].Delay <= 0){
+//			SCH_tasks_G[0].RunMe++;
+//			if (SCH_tasks_G[0].Period){
+//				SCH_tasks_G[0].Delay = 1;
+//			}
+//		}
+//	}
 	unsigned char Index;
-
 	for (Index = 0; Index < SCH_MAX_TASKS; Index++) {
 		if (SCH_tasks_G[Index].pTask) {
 			SCH_tasks_G[Index].Delay -= 1;

@@ -18,7 +18,7 @@ void fsm_automatic_run(){
 		setLightInit();
 		status = RED_GREEN;
 		setTimer3(1000);
-		setTimer1(green_time_temp * 1000);
+		setTimer1(green_time * 1000);
 		break;
 
 	case RED_GREEN:
@@ -33,10 +33,11 @@ void fsm_automatic_run(){
 		if (timer1_flag == 1){
 			status = RED_AMBER;
 			green_time_temp = green_time;
-			setTimer1(amber_time_temp * 1000);
+			setTimer1(amber_time * 1000);
 		}
 
 		if (isButton1Pressed() == 1){
+			setTimeInit();
 			status = MAN_RED;
 			setTimer1(3000);
 		}
@@ -55,10 +56,11 @@ void fsm_automatic_run(){
 			status = GREEN_RED;
 			amber_time_temp = amber_time;
 			red_time_temp = red_time;
-			setTimer1(green_time_temp * 1000);
+			setTimer1(green_time * 1000);
 		}
 
 		if (isButton1Pressed() == 1){
+			setTimeInit();
 			status = MAN_RED;
 			setTimer1(10000);
 		}
@@ -76,10 +78,11 @@ void fsm_automatic_run(){
 		if (timer1_flag == 1){
 			status = AMBER_RED;
 			green_time_temp = green_time;
-			setTimer1(amber_time_temp * 1000);
+			setTimer1(amber_time * 1000);
 		}
 
 		if (isButton1Pressed() == 1){
+			setTimeInit();
 			status = MAN_RED;
 			setTimer1(10000);
 		}
@@ -97,11 +100,12 @@ void fsm_automatic_run(){
 			status = RED_GREEN;
 			red_time_temp = red_time;
 			amber_time_temp = amber_time;
-			setTimer1(green_time_temp);
+			setTimer1(green_time * 1000);
 		}
 
 		if (isButton1Pressed() == 1){
-			status = MAN_RED;
+			setTimeInit();
+			status = RED_GREEN;
 			setTimer1(10000);
 		}
 		break;
@@ -109,5 +113,4 @@ void fsm_automatic_run(){
 		break;
 	}
 }
-
 
