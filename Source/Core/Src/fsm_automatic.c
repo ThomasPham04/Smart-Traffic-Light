@@ -17,6 +17,7 @@ void fsm_automatic_run() {
         // TODO
         setTimeInit();
         setLightInit();
+        index_led = 0;
         status = RED_GREEN;
         counter3 = 100;  // 100 * 10ms = 1 second
         counter1 = green_time * 100;  // green_time in seconds
@@ -42,6 +43,7 @@ void fsm_automatic_run() {
 
         if (isButton1Pressed() == 1) {
             setTimeInit();
+            setLightInit();
             status = MAN_RED;
             counter1 = 300;  // 3 seconds
         }
@@ -68,6 +70,7 @@ void fsm_automatic_run() {
 
         if (isButton1Pressed() == 1) {
             setTimeInit();
+            setLightInit();
             status = MAN_RED;
             counter1 = 1000;  // 10 seconds
         }
@@ -93,6 +96,7 @@ void fsm_automatic_run() {
 
         if (isButton1Pressed() == 1) {
             setTimeInit();
+            setLightInit();
             status = MAN_RED;
             counter1 = 1000;  // 10 seconds
         }
@@ -119,6 +123,7 @@ void fsm_automatic_run() {
 
         if (isButton1Pressed() == 1) {
             setTimeInit();
+            setLightInit();
             status = RED_GREEN;
             counter1 = 1000;  // 10 seconds
         }
