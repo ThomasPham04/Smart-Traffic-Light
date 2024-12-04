@@ -63,9 +63,7 @@ static void MX_TIM2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void Led_Toggle(){
-	if (isButton1Pressed() == 1){
 		HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-	}
 }
 
 void dispModeWrapper(){
@@ -124,8 +122,10 @@ int main(void)
   	SCH_Add_Task(updateClock, 0, 10);
   	// End Display Led
 
-  	SCH_Add_Task(fsm_automatic_run, 0, 100);
-  	SCH_Add_Task(fsm_manual_run, 0, 100);
+  	SCH_Add_Task(fsm_automatic_run, 0, 10);
+  	SCH_Add_Task(fsm_manual_run, 0, 10);
+  	SCH_Add_Task(fsm_setting_run, 0, 10);
+//  	  	  SCH_Add_Task(Led_Toggle, 0, 100);
   while (1)
   {
 	  SCH_Dispatch_Tasks();

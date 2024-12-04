@@ -19,7 +19,7 @@ void fsm_automatic_run() {
         setLightInit();
         status = RED_GREEN;
         counter3 = 100;  // 100 * 10ms = 1 second
-        counter1 = green_time * 10;  // green_time in seconds
+        counter1 = green_time * 100;  // green_time in seconds
         break;
 
     case RED_GREEN:
@@ -37,7 +37,7 @@ void fsm_automatic_run() {
         if (counter1 <= 0) {
             status = RED_AMBER;
             green_time_temp = green_time;
-            counter1 = amber_time * 10;
+            counter1 = amber_time * 100;
         }
 
         if (isButton1Pressed() == 1) {
@@ -63,7 +63,7 @@ void fsm_automatic_run() {
             status = GREEN_RED;
             amber_time_temp = amber_time;
             red_time_temp = red_time;
-            counter1 = green_time * 10;
+            counter1 = green_time * 100;
         }
 
         if (isButton1Pressed() == 1) {
@@ -88,7 +88,7 @@ void fsm_automatic_run() {
         if (counter1 == 0) {
             status = AMBER_RED;
             green_time_temp = green_time;
-            counter1 = amber_time * 10;
+            counter1 = amber_time * 100;
         }
 
         if (isButton1Pressed() == 1) {
@@ -114,7 +114,7 @@ void fsm_automatic_run() {
             status = RED_GREEN;
             red_time_temp = red_time;
             amber_time_temp = amber_time;
-            counter1 = green_time * 10;
+            counter1 = green_time * 100;
         }
 
         if (isButton1Pressed() == 1) {
