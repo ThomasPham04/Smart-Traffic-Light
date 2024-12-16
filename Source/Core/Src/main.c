@@ -129,10 +129,10 @@ int main(void)
   while (1)
   {
 	  SCH_Dispatch_Tasks();
-//	  if (timer0_flag == 1){
-//		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
-//		  setTimer0(1000);
-//	  }
+	  if (timer0_flag == 1){
+		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
+		  setTimer0(1000);
+	  }
 //
 //		dispMode(mode);
 //		fsm_automatic_run();

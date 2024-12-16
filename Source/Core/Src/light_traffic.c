@@ -78,13 +78,12 @@ void setYellow_2(){
 	HAL_GPIO_WritePin(LED_2_YELLOW_GPIO_Port, LED_2_YELLOW_Pin, GPIO_PIN_SET);
 }
 
-void setToggleRed(){//2HZ
+void setToggleRed(){
     HAL_GPIO_WritePin(LED_1_GREEN_GPIO_Port, LED_1_GREEN_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(LED_1_YELLOW_GPIO_Port, LED_1_YELLOW_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(LED_2_GREEN_GPIO_Port, LED_2_GREEN_Pin, GPIO_PIN_RESET);
     HAL_GPIO_WritePin(LED_2_YELLOW_GPIO_Port, LED_2_YELLOW_Pin, GPIO_PIN_RESET);
 
-    // Toggle only the red LEDs on both sets
     HAL_GPIO_TogglePin(LED_1_RED_GPIO_Port, LED_1_RED_Pin);
     HAL_GPIO_TogglePin(LED_2_RED_GPIO_Port, LED_2_RED_Pin);
 
