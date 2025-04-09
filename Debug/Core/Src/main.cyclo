@@ -1,0 +1,8 @@
+../Core/Src/main.c:65:6:Led_Toggle	1
+../Core/Src/main.c:69:6:dispModeWrapper	1
+../Core/Src/main.c:78:5:main	2
+../Core/Src/main.c:154:6:SystemClock_Config	3
+../Core/Src/main.c:190:13:MX_TIM2_Init	4
+../Core/Src/main.c:235:13:MX_GPIO_Init	1
+../Core/Src/main.c:297:6:HAL_TIM_PeriodElapsedCallback	1
+../Core/Src/main.c:307:6:Error_Handler	1
