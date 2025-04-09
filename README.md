@@ -38,3 +38,5 @@ The **Smart Traffic Light** project is an embedded systems application developed
 1. Clone the repository:
    ```bash
    git clone https://github.com/yourusername/smart-traffic-light.git
+2. Run file Smart-Traffic-Light.pdsprj (Require install Proteus)
+3. Click on the "Run the simulation" button to run the simulation
