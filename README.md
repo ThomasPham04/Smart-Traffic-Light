@@ -12,7 +12,7 @@ The **Smart Traffic Light** project is an embedded systems application developed
   - **Value Setting**: Button 3 confirms and applies the adjusted time value.
 - **Modes**:
   - **Mode 1 (Normal)**: Standard traffic light operation with pre-set timings.
-  - **Mode 2-4 (Modify)**: Allows runtime adjustment of red, amber, or green light durations with blinking LEDs (2 Hz) and real-time display updates.
+  - **Mode 2-4 (Modify)**: Allows runtime adjustment of red, amber, or green light durations and real-time display updates.
 - **Debouncing**: Software-based button debouncing ensures reliable input detection.
 - **Cooperative Scheduler**: Manages periodic tasks (e.g., 0.5s, 1s, 1.5s, 2s, 2.5s) with a 10ms timer tick for precise timing.
 
